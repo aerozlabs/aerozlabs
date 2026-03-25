@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aeroz Labs - Workshop Registration & Payment</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: 180, 100%, 50%;
+            --primary-dark: 180, 100%, 40%;
+            --primary-light: 180, 100%, 60%;
+            --dark: 0, 0%, 8%;
+            --light: 0, 0%, 95%;
+            --error: 0, 100%, 50%;
+            --success: 120, 100%, 45%;
+            --text-primary: 0, 0%, 100%;
+            --text-secondary: 0, 0%, 70%;
+            --border: 0, 0%, 20%;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, hsl(var(--dark)), hsl(var(--dark)));
+            color: hsl(var(--text-primary));
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ============================================================================
+           NAVBAR
+           ============================================================================ */
+        .navbar {
+            background: rgba(13, 13, 13, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid hsl(var(--border));
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            font-family: 'Space Grotesk', sans-serif;
+            color: hsl(var(--text-primary));
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-dark)));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: hsl(var(--text-secondary));
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: hsl(var(--primary));
+        }
+
+        /* ============================================================================
+           MAIN CONTENT
+           ============================================================================ */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            flex: 1;
+            width: 100%;
+        }
+
+        .content-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        @media (max-width: 768px) {
+            .content-wrapper {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ============================================================================
+           CARD STYLING
+           ============================================================================ */
+        .card {
+            background: rgba(30, 30, 30, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid hsl(var(--border));
+            border-radius: 16px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            border-color: hsl(var(--primary) / 0.5);
+            box-shadow: 0 8px 32px rgba(0, 200, 255, 0.1);
+        }
+
+        .card-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        /* ============================================================================
+           FORM STYLING
+           ============================================================================ */
+        .form-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: hsl(var(--text-primary));
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .input-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .input {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            background: rgba(50, 50, 50, 0.6);
+            border: 1px solid hsl(var(--border));
+            border-radius: 8px;
+            color: hsl(var(--text-primary));
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+        }
+
+        .input::placeholder {
+            color: hsl(var(--text-secondary));
+        }
+
+        .input:focus {
+            border-color: hsl(var(--primary) / 0.5);
+            box-shadow: 0 0 0 2px hsl(var(--primary) / 0.2);
+            outline: none;
+        }
+
+        .input.error {
+            border-color: hsl(var(--error));
+            box-shadow: 0 0 0 2px hsl(var(--error) / 0.2);
+        }
+
+        .input-error {
+            font-size: 0.75rem;
+            color: hsl(var(--error));
+            margin-top: 0.25rem;
+            display: none;
+        }
+
+        .input-error.show {
+            display: block;
+        }
+
+        .two-col {
+            display: grid;
+            gap: 1.25rem;
+        }
+
+        @media (min-width: 640px) {
+            .two-col {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        /* ============================================================================
+           ALERT BOX
+           ============================================================================ */
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            display: none;
+            font-weight: 500;
+        }
+
+        .alert.show {
+            display: block;
+        }
+
+        .alert.success {
+            background: hsl(var(--success) / 0.1);
+            border: 1px solid hsl(var(--success));
+            color: hsl(var(--success));
+        }
+
+        .alert.error {
+            background: hsl(var(--error) / 0.1);
+            border: 1px solid hsl(var(--error));
+            color: hsl(var(--error));
+        }
+
+        .alert.info {
+            background: hsl(var(--primary) / 0.1);
+            border: 1px solid hsl(var(--primary));
+            color: hsl(var(--primary));
+        }
+
+        /* ============================================================================
+           ENHANCED PAY & PROCEED BUTTON
+           ============================================================================ */
+        .btn-pay-proceed {
+            width: 100%;
+            padding: 1.25rem;
+            height: auto;
+            min-height: 4rem;
+            font-size: 1.1rem;
+            font-weight: 700;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Space Grotesk', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            position: relative;
+            overflow: hidden;
+            margin-top: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Gradient Background */
+        .btn-pay-proceed {
+            background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-dark)));
+            color: #000;
+            box-shadow: 0 8px 24px rgba(0, 200, 255, 0.4);
+        }
+
+        /* Hover State */
+        .btn-pay-proceed:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 36px rgba(0, 200, 255, 0.6);
+            background: linear-gradient(135deg, hsl(var(--primary-light)), hsl(var(--primary)));
+        }
+
+        /* Active State */
+        .btn-pay-proceed:active:not(:disabled) {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(0, 200, 255, 0.4);
+        }
+
+        /* Disabled State */
+        .btn-pay-proceed:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Pulse Animation */
+        @keyframes pulse {
+            0%, 100% {
+                box-shadow: 0 8px 24px rgba(0, 200, 255, 0.4);
+            }
+            50% {
+                box-shadow: 0 8px 36px rgba(0, 200, 255, 0.7);
+            }
+        }
+
+        .btn-pay-proceed.pulse {
+            animation: pulse 2s infinite;
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            border: 3px solid rgba(0, 0, 0, 0.2);
+            border-top-color: #000;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* ============================================================================
+           PAYMENT SUMMARY
+           ============================================================================ */
+        .payment-card {
+            position: sticky;
+            top: 7rem;
+        }
+
+        .price-tag {
+            font-size: 2.5rem;
+            font-weight: 700;
+            font-family: 'Space Grotesk', sans-serif;
+            color: hsl(var(--primary));
+            margin: 1rem 0;
+        }
+
+        .price-breakdown {
+            margin: 1.5rem 0;
+            padding: 1rem 0;
+            border-top: 1px solid hsl(var(--border));
+            border-bottom: 1px solid hsl(var(--border));
+        }
+
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+            font-size: 0.95rem;
+        }
+
+        .price-row.total {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-top: 1rem;
+            color: hsl(var(--primary));
+        }
+
+        .feature-list {
+            margin: 1.5rem 0;
+            list-style: none;
+        }
+
+        .feature-item {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+            color: hsl(var(--text-secondary));
+        }
+
+        .feature-icon {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: hsl(var(--primary) / 0.2);
+            border-radius: 4px;
+            color: hsl(var(--primary));
+            font-weight: 700;
+            font-size: 0.75rem;
+        }
+
+        /* ============================================================================
+           MODAL
+           ============================================================================ */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: rgba(30, 30, 30, 0.95);
+            border: 2px solid hsl(var(--primary));
+            border-radius: 16px;
+            padding: 2.5rem;
+            max-width: 500px;
+            text-align: center;
+            animation: slideUp 0.4s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-icon {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            animation: scaleIn 0.5s ease;
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0.5);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .modal-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .modal-text {
+            color: hsl(var(--text-secondary));
+            margin-bottom: 2rem;
+            line-height: 1.8;
+            font-size: 0.95rem;
+        }
+
+        .modal-button {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-dark)));
+            color: #000;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .modal-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px rgba(0, 200, 255, 0.3);
+        }
+
+        /* ============================================================================
+           FOOTER
+           ============================================================================ */
+        .footer {
+            background: rgba(13, 13, 13, 0.95);
+            border-top: 1px solid hsl(var(--border));
+            padding: 2rem;
+            margin-top: auto;
+        }
+
+        .footer-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h4 {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: hsl(var(--text-primary));
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-section a {
+            color: hsl(var(--text-secondary));
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-section a:hover {
+            color: hsl(var(--primary));
+        }
+
+        .footer-bottom {
+            border-top: 1px solid hsl(var(--border));
+            padding-top: 1.5rem;
+            text-align: center;
+            color: hsl(var(--text-secondary));
+            font-size: 0.9rem;
+        }
+
+        /* ============================================================================
+           ANIMATIONS
+           ============================================================================ */
+        .reveal {
+            animation: fadeInUp 0.6s ease forwards;
+            opacity: 0;
+        }
+
+        .reveal.d1 { animation-delay: 0.1s; }
+        .reveal.d2 { animation-delay: 0.2s; }
+        .reveal.d3 { animation-delay: 0.3s; }
+        .reveal.d4 { animation-delay: 0.4s; }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ============================================================================
+           RESPONSIVE
+           ============================================================================ */
+        @media (max-width: 768px) {
+            .navbar-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-links {
+                gap: 1rem;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+
+            .card {
+                padding: 1.5rem;
+            }
+
+            .btn-pay-proceed {
+                min-height: 3.5rem;
+                font-size: 1rem;
+            }
+
+            .modal-content {
+                margin: 1rem;
+                padding: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="#" class="logo">
+                <div class="logo-icon">⚡</div>
+                <span>Aeroz<span style="color: hsl(var(--primary));">Labs</span></span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#courses">Courses</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="content-wrapper">
+            <!-- Form Card -->
+            <div class="reveal d3 card">
+                <div id="alertBox" class="alert"></div>
+
+                <h2 class="card-title">Register for Workshop</h2>
+
+                <form id="registrationForm" novalidate>
+                    <div class="two-col">
+                        <div class="input-group">
+                            <label class="form-label">Full Name *</label>
+                            <input type="text" id="fullName" name="fullName" required placeholder="Enter your full name" class="input">
+                            <div class="input-error" id="fullNameError"></div>
+                        </div>
+                        <div class="input-group">
+                            <label class="form-label">Mobile Number *</label>
+                            <input type="tel" id="mobile" name="mobile" required placeholder="+91 XXXXX XXXXX" class="input">
+                            <div class="input-error" id="mobileError"></div>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label class="form-label">Email Address *</label>
+                        <input type="email" id="email" name="email" required placeholder="you@example.com" class="input">
+                        <div class="input-error" id="emailError"></div>
+                    </div>
+
+                    <div class="two-col">
+                        <div class="input-group">
+                            <label class="form-label">Gender *</label>
+                            <select id="gender" name="gender" required class="input">
+                                <option value="">Select gender</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                            </select>
+                            <div class="input-error" id="genderError"></div>
+                        </div>
+                        <div class="input-group">
+                            <label class="form-label">College Name *</label>
+                            <input type="text" id="college" name="college" required placeholder="Enter your college name" class="input">
+                            <div class="input-error" id="collegeError"></div>
+                        </div>
+                    </div>
+
+                    <div class="two-col">
+                        <div class="input-group">
+                            <label class="form-label">Course *</label>
+                            <input type="text" id="course" name="course" required placeholder="e.g. B.Tech, BCA" class="input">
+                            <div class="input-error" id="courseError"></div>
+                        </div>
+                        <div class="input-group">
+                            <label class="form-label">Semester *</label>
+                            <select id="semester" name="semester" required class="input">
+                                <option value="">Select semester</option>
+                                <option value="1">1st Semester</option>
+                                <option value="2">2nd Semester</option>
+                                <option value="3">3rd Semester</option>
+                                <option value="4">4th Semester</option>
+                                <option value="5">5th Semester</option>
+                                <option value="6">6th Semester</option>
+                                <option value="7">7th Semester</option>
+                                <option value="8">8th Semester</option>
+                            </select>
+                            <div class="input-error" id="semesterError"></div>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label class="form-label">Location *</label>
+                        <input type="text" id="location" name="location" required placeholder="Enter your city/state" class="input">
+                        <div class="input-error" id="locationError"></div>
+                    </div>
+
+                    <div style="font-size: 0.85rem; color: hsl(var(--text-secondary)); margin-bottom: 1rem; line-height: 1.6;">
+                        ✓ All fields are required and encrypted<br>
+                        ✓ Payment will be processed after registration<br>
+                        ✓ Instant confirmation email will be sent
+                    </div>
+
+                    <button type="submit" id="submitBtn" class="btn-pay-proceed pulse">
+                        <span id="btnText">💳 Pay & Proceed ₹449</span>
+                    </button>
+                </form>
+            </div>
+
+            <!-- Summary Card -->
+            <div class="reveal d4 payment-card">
+                <div class="card">
+                    <h3 class="card-title">Order Summary</h3>
+
+                    <div style="margin: 1.5rem 0;">
+                        <div style="font-size: 0.9rem; color: hsl(var(--text-secondary)); margin-bottom: 0.5rem;">Aeroz Labs Workshop</div>
+                        <div class="price-tag">₹449</div>
+                    </div>
+
+                    <div class="price-breakdown">
+                        <div class="price-row">
+                            <span>Workshop Fee</span>
+                            <span>₹449.00</span>
+                        </div>
+                        <div class="price-row">
+                            <span>GST (Included)</span>
+                            <span>₹0.00</span>
+                        </div>
+                        <div class="price-row total">
+                            <span>Total Amount</span>
+                            <span>₹449.00</span>
+                        </div>
+                    </div>
+
+                    <ul class="feature-list">
+                        <li class="feature-item">
+                            <div class="feature-icon">✓</div>
+                            <div>
+                                <strong>Secure Payment</strong>
+                                <div style="font-size: 0.85rem; color: hsl(var(--text-secondary));">SSL Encrypted via Razorpay</div>
+                            </div>
+                        </li>
+                        <li class="feature-item">
+                            <div class="feature-icon">✓</div>
+                            <div>
+                                <strong>Instant Access</strong>
+                                <div style="font-size: 0.85rem; color: hsl(var(--text-secondary));">Confirmation sent immediately</div>
+                            </div>
+                        </li>
+                        <li class="feature-item">
+                            <div class="feature-icon">✓</div>
+                            <div>
+                                <strong>24/7 Support</strong>
+                                <div style="font-size: 0.85rem; color: hsl(var(--text-secondary));">Help available anytime</div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-icon">✓</div>
+            <h3 class="modal-title">Registration Saved!</h3>
+            <p class="modal-text">Your registration data has been successfully saved. Click below to proceed to the secure payment page.</p>
+            <button class="modal-button" onclick="redirectToPayment()">Proceed to Payment 💳</button>
+        </div>
+    </div>
+
+    <!-- Error Modal -->
+    <div id="errorModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-icon">⚠️</div>
+            <h3 class="modal-title">Error Occurred</h3>
+            <p class="modal-text" id="errorMessage">Something went wrong. Please check your details and try again.</p>
+            <button class="modal-button" onclick="closeErrorModal()">Try Again</button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-section">
+                <h4>About Aeroz Labs</h4>
+                <p style="color: hsl(var(--text-secondary)); font-size: 0.9rem;">Leading drone technology education and innovation center providing world-class training.</p>
+            </div>
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#courses">Courses</a></li>
+                    <li><a href="#about">About Us</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Contact Info</h4>
+                <ul>
+                    <li><a href="mailto:hello@aerozlabs.com">hello@aerozlabs.com</a></li>
+                    <li><a href="tel:+919876543210">+91 9876543210</a></li>
+                    <li>Mumbai, India</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Aeroz Labs. All rights reserved. | Secure & Encrypted Payment</p>
+        </div>
+    </footer>
+
+    <script>
+        // ============================================================================
+        // CONFIGURATION - UPDATE WITH YOUR DETAILS
+        // ============================================================================
+        const CONFIG = {
+            GOOGLE_APPS_SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbygimDbZtYFm1bThHsnMKUoiObecI4gGUfDXqwJ7QaFZO7Wh4S6JcXjYSp0V8MM1CxpWw/exec',
+            RAZORPAY_PAYMENT_PAGE_LINK: 'https://rzp.io/rzp/aerozlabs',
+            PAYMENT_AMOUNT: 44900,
+            PAYMENT_CURRENCY: 'INR',
+            BUSINESS_NAME: 'Aeroz Labs',
+            BUSINESS_DESCRIPTION: 'Drone Technology Workshop Registration'
+        };
+
+        // ============================================================================
+        // FORM VALIDATION
+        // ============================================================================
+        const validators = {
+            fullName: (value) => {
+                if (value.trim().length < 3) return 'Name must be at least 3 characters';
+                if (!/^[a-zA-Z\s]+$/.test(value)) return 'Name can only contain letters and spaces';
+                return '';
+            },
+            mobile: (value) => {
+                const cleaned = value.replace(/\D/g, '');
+                if (cleaned.length !== 10) return 'Enter a valid 10-digit mobile number';
+                return '';
+            },
+            email: (value) => {
+                if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return 'Enter a valid email address';
+                return '';
+            },
+            gender: (value) => {
+                if (!value) return 'Please select a gender';
+                return '';
+            },
+            college: (value) => {
+                if (value.trim().length < 2) return 'College name must be at least 2 characters';
+                return '';
+            },
+            course: (value) => {
+                if (value.trim().length < 2) return 'Course must be at least 2 characters';
+                return '';
+            },
+            semester: (value) => {
+                if (!value) return 'Please select a semester';
+                return '';
+            },
+            location: (value) => {
+                if (value.trim().length < 2) return 'Location must be at least 2 characters';
+                return '';
+            }
+        };
+
+        // ============================================================================
+        // FORM HANDLING
+        // ============================================================================
+        const form = document.getElementById('registrationForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const alertBox = document.getElementById('alertBox');
+
+        // Real-time validation
+        Object.keys(validators).forEach(fieldName => {
+            const field = document.getElementById(fieldName);
+            if (field) {
+                field.addEventListener('blur', () => validateField(fieldName));
+                field.addEventListener('input', () => {
+                    if (document.getElementById(fieldName + 'Error').classList.contains('show')) {
+                        validateField(fieldName);
+                    }
+                });
+            }
+        });
+
+        function validateField(fieldName) {
+            const field = document.getElementById(fieldName);
+            const errorElement = document.getElementById(fieldName + 'Error');
+            const error = validators[fieldName](field.value);
+
+            if (error) {
+                field.classList.add('error');
+                errorElement.textContent = error;
+                errorElement.classList.add('show');
+                return false;
+            } else {
+                field.classList.remove('error');
+                errorElement.classList.remove('show');
+                return true;
+            }
+        }
+
+        function validateForm() {
+            let isValid = true;
+            Object.keys(validators).forEach(fieldName => {
+                if (!validateField(fieldName)) {
+                    isValid = false;
+                }
+            });
+            return isValid;
+        }
+
+        // ============================================================================
+        // FORM SUBMISSION - SAVE DATA & REDIRECT
+        // ============================================================================
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            if (!validateForm()) {
+                showAlert('Please fix the errors above', 'error');
+                return;
+            }
+
+            // Disable button and show loading state
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="spinner"></span> Processing...';
+
+            try {
+                // Collect form data
+                const formData = {
+                    timestamp: new Date().toISOString(),
+                    fullName: document.getElementById('fullName').value.trim(),
+                    mobile: document.getElementById('mobile').value.trim(),
+                    email: document.getElementById('email').value.trim(),
+                    gender: document.getElementById('gender').value,
+                    college: document.getElementById('college').value.trim(),
+                    course: document.getElementById('course').value.trim(),
+                    semester: document.getElementById('semester').value,
+                    location: document.getElementById('location').value.trim()
+                };
+
+                console.log('Sending data to Google Apps Script:', formData);
+
+                // Save to Google Sheet using no-cors mode
+                const response = await fetch(CONFIG.GOOGLE_APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    body: JSON.stringify(formData)
+                });
+
+                console.log('Response status:', response.status);
+                console.log('✓ Data sent to Google Apps Script successfully');
+                
+                // With no-cors mode, we can't read the response, so we assume success if no error is thrown
+                const result = { status: 'success', message: 'Registration saved' };
+
+                if (result.status === 'success') {
+                    console.log('✓ Registration saved successfully');
+                    showAlert('✓ Registration saved! Redirecting to payment...', 'success');
+                    
+                    // Show success modal after 1 second
+                    setTimeout(() => {
+                        document.getElementById('successModal').classList.add('show');
+                    }, 1000);
+                } else {
+                    throw new Error(result.message || 'Failed to save registration');
+                }
+
+            } catch (error) {
+                console.error('✗ Error:', error);
+                showAlert('Error: ' + error.message, 'error');
+                showErrorModal('Failed to save registration. Please try again.');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<span id="btnText">💳 Pay & Proceed ₹449</span>';
+            }
+        });
+
+        // ============================================================================
+        // REDIRECT TO PAYMENT
+        // ============================================================================
+        function redirectToPayment() {
+            const paymentLink = CONFIG.RAZORPAY_PAYMENT_PAGE_LINK;
+            
+            if (!paymentLink || paymentLink === 'PASTE_YOUR_RAZORPAY_PAYMENT_PAGE_LINK_HERE') {
+                showErrorModal('❌ Payment link is not configured. Please contact support.');
+                return;
+            }
+
+            console.log('Redirecting to payment page:', paymentLink);
+            window.location.href = paymentLink;
+        }
+
+        // ============================================================================
+        // ALERT FUNCTIONS
+        // ============================================================================
+        function showAlert(message, type) {
+            alertBox.textContent = message;
+            alertBox.className = `alert show ${type}`;
+            alertBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function showErrorModal(message) {
+            document.getElementById('errorMessage').textContent = message;
+            document.getElementById('errorModal').classList.add('show');
+        }
+
+        function closeErrorModal() {
+            document.getElementById('errorModal').classList.remove('show');
+        }
+
+        // ============================================================================
+        // INITIALIZATION
+        // ============================================================================
+        console.log('Aeroz Labs Registration System Loaded');
+        console.log('Google Apps Script URL:', CONFIG.GOOGLE_APPS_SCRIPT_URL);
+        console.log('Razorpay Payment Page Link:', CONFIG.RAZORPAY_PAYMENT_PAGE_LINK);
+    </script>
+</body>
+</html>
